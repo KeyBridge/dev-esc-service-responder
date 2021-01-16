@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Start Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+
+    <h1> Example SAS / ESC status listener </h1>
+
+    <p>
+      The REST resources  are described in the
+      <a href="listen/application.wadl">application.wadl</a> file.
+    </p>
+
+    <p> Ping listener </p>
+
+    <ul>
+      <li> PUT <a href="listen/ping">/dev/esc/rs/listen/ping</a> </li>
+    </ul>
+
+    <p> DPAC status listener </p>
+    <ul>
+      <li> PUT <a href="listen/dpaStatus">/dev/esc/rs/listen/dpac</a> </li>
+    </ul>
+
+    <p>
+      The context root for this application is "/dev/esc/rs".
+      This is configured in the <code>web.xml</code> file.
+    </p>
+    <p>
+      Web resources are exposed under the "listen" application path.
+      This is configured in the <code>ApplicationConfig.java</code> class.
+    </p>
+
+  </body>
+</html>
