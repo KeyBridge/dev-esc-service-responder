@@ -53,25 +53,30 @@ public class PingListenerResource {
   /**
    * HTTP(S) listener end point to receive PING messages.
    *
-   * @param accessToken the STS issued access_token presented by the ESC to the
-   *                    SAS to authenticate the ESC. Use the STS 'introspect'
-   *                    api to validate the token against the ESC well known
-   *                    server configuration.
-   * @param messageID   An absolute IRI that uniquely identifies the message.
-   * @param relatesTo   If present, identifies the messageID that this message
-   *                    is responding to.
-   * @param content     url-encoded hash value of the current database state
+   * @param authorization The HTTP Bearer access token. This is a STS issued
+   *                      access_token issued by the ESC to the SAS to
+   *                      authenticate the ESC. Use the STS 'introspect' api to
+   *                      validate the token against the ESC well known server
+   *                      configuration.
+   * @param messageID     An absolute IRI that uniquely identifies the message.
+   * @param relatesTo     If present, identifies the messageID that this message
+   *                      is responding to.
+   * @param content       url-encoded hash value of the current database state
    * @return http 204 on success, 500 on error
    */
   @PUT
-  public Response putPing(@HeaderParam(HttpHeaders.AUTHORIZATION) String accessToken,
-                          @HeaderParam("MessageID") String messageID,
-                          @HeaderParam("RelatesTo") String relatesTo,
-                          String content) {
+  public Response receivePing(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+                              @HeaderParam("MessageID") String messageID,
+                              @HeaderParam("RelatesTo") String relatesTo,
+                              String content) {
+    /**
+     * Parse the authorization header.
+     */
+    String accessToken = parseHttpAuthorizationHeader(authorization);
     /**
      * Log the request to console so we know something arrived.
      */
-    LOG.log(Level.INFO, "PingListenerResource '{'access_token={0}, db_hash={1}'}'", new Object[]{accessToken, content});
+    LOG.log(Level.INFO, "PingListenerResource '{'access_token={0}, messageId={1}, relatesTo={2}, content={3}'}'", new Object[]{accessToken, messageID, relatesTo, content});
     /**
      * Note that the ESC client is configured to timeout ping status message
      * delivery after 1/2 seconds.
@@ -81,11 +86,27 @@ public class PingListenerResource {
      * the ESC.
      */
     try {
-      Thread.sleep(RANDOM.nextInt(550));  // process up to 1/2 second
+      Thread.sleep(RANDOM.nextInt(550));  // simlulate processing up to 1/2 second
       return Response.noContent().build();  // http 204 on success
     } catch (InterruptedException ex) {
       LOG.log(Level.INFO, "Ping resource interrupted {0}", ex.getMessage());
       return Response.serverError().build(); // http 500 on error
     }
+  }
+
+  /**
+   * Parse the authorization header to get the bearer credential.
+   *
+   * @param authorization the authorization header value
+   * @return the bearer credential component
+   * @throws Exception if no authorization header is present or an invalid
+   *                   scheme is offered
+   */
+  private String parseHttpAuthorizationHeader(String authorization) throws WebApplicationException {
+    if (authorization == null || !authorization.matches("^[Bb]earer \\S+$")) {
+      LOG.warning("Authorization HTTP header is required with format 'Bearer [credential]'");
+      throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).header("Exception", "Authorization HTTP header is required with format 'Bearer [credential]'").build());
+    }
+    return authorization.split("\\s")[1].trim();
   }
 }
