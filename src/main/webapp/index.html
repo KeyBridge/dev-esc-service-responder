@@ -9,29 +9,30 @@
     <h1> Example SAS / ESC status listener </h1>
 
     <p>
-      The REST resources  are described in the
-      <a href="listen/application.wadl">application.wadl</a> file.
-    </p>
-
-    <p> Ping listener </p>
-
-    <ul>
-      <li> PUT <a href="listen/ping">/dev/esc/rs/listen/ping</a> </li>
-    </ul>
-
-    <p> DPAC status listener </p>
-    <ul>
-      <li> PUT <a href="listen/dpac">/dev/esc/rs/listen/dpac</a> </li>
-    </ul>
-
-    <p>
-      The context root for this application is "/dev/esc/rs".
+      The context root for this application is <code>"/dev/esc/rs"</code>.
       This is configured in the <code>web.xml</code> file.
     </p>
     <p>
       Web resources are exposed under the "listen" application path.
       This is configured in the <code>ApplicationConfig.java</code> class.
     </p>
+
+    <p>
+      The REST resources  are described in the
+      <a href="listen/application.wadl">application.wadl</a> file.
+      There are two REST resource end points:
+    </p>
+
+    <p> Ping message listener </p>
+
+    <ul>
+      <li> PUT <a href="listen/ping">/dev/esc/rs/listen/ping</a> </li>
+    </ul>
+
+    <p> DpacStatus message listener </p>
+    <ul>
+      <li> PUT <a href="listen/dpac">/dev/esc/rs/listen/dpac</a> </li>
+    </ul>
 
   </body>
 </html>
