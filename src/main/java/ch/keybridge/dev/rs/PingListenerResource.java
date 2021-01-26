@@ -19,9 +19,12 @@
 package ch.keybridge.dev.rs;
 
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -46,6 +49,16 @@ public class PingListenerResource {
    * processing time.
    */
   private static final Random RANDOM = new Random();
+  /**
+   * An AtomicLong counter for consistent message identification.
+   */
+  private static final AtomicLong ATOMIC_LONG = new AtomicLong(System.currentTimeMillis());
+
+  /**
+   * ServletRequest interface provides HTTP request information.
+   */
+  @Context
+  protected HttpServletRequest httpServletRequest;
 
   public PingListenerResource() {
   }
@@ -67,7 +80,6 @@ public class PingListenerResource {
   @PUT
   public Response receivePing(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
                               @HeaderParam("MessageID") String messageID,
-                              @HeaderParam("RelatesTo") String relatesTo,
                               String content) {
     /**
      * Parse the authorization header.
@@ -76,7 +88,9 @@ public class PingListenerResource {
     /**
      * Log the request to console so we know something arrived.
      */
-    LOG.log(Level.INFO, "PingListenerResource '{'access_token={0}, messageId={1}, relatesTo={2}, content={3}'}'", new Object[]{accessToken, messageID, relatesTo, content});
+    LOG.log(Level.INFO,
+            "PingListenerResource received ping '{'remoteAddr={0}, access_token={1}, messageId={2}, content={3}'}'",
+            new Object[]{httpServletRequest.getRemoteAddr(), accessToken, messageID, content});
     /**
      * Note that the ESC client is configured to timeout ping status message
      * delivery after 1/2 seconds.
@@ -87,7 +101,10 @@ public class PingListenerResource {
      */
     try {
       Thread.sleep(RANDOM.nextInt(550));  // simlulate processing up to 1/2 second
-      return Response.noContent().build();  // http 204 on success
+      return Response.noContent()
+        .header("MessageId", ATOMIC_LONG.getAndIncrement())
+        .header("RelatesTo", messageID)
+        .build();  // http 204 on success
     } catch (InterruptedException ex) {
       LOG.log(Level.INFO, "Ping resource interrupted {0}", ex.getMessage());
       return Response.serverError().build(); // http 500 on error

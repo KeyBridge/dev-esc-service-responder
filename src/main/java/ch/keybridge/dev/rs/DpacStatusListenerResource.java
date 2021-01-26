@@ -21,7 +21,9 @@ package ch.keybridge.dev.rs;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -46,6 +48,12 @@ public class DpacStatusListenerResource {
    * processing time.
    */
   private static final Random RANDOM = new Random();
+
+  /**
+   * ServletRequest interface provides HTTP request information.
+   */
+  @Context
+  protected HttpServletRequest httpServletRequest;
 
   /**
    * Creates a new instance of DpaStatusResource
@@ -82,7 +90,10 @@ public class DpacStatusListenerResource {
     /**
      * Log the request to console so we know something arrived.
      */
-    LOG.log(Level.INFO, "DpacStatusListenerResource '{'access_token={0}, messageId={1}, relatesTo={2}, content={3}'}'", new Object[]{accessToken, messageID, relatesTo, content});
+    LOG.log(Level.INFO,
+            "DpacStatusListenerResource received notice '{'remoteAddr={0}, access_token={1}, messageId={2}, relatesTo={3}, content={4}'}'",
+            new Object[]{httpServletRequest.getRemoteAddr(), accessToken, messageID, relatesTo, content});
+
     /**
      * Note that the ESC client is configured to timeout DPAC status message
      * delivery after 2 seconds.
