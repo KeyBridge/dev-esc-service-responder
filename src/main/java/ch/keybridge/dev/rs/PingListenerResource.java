@@ -22,9 +22,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -57,9 +55,7 @@ public class PingListenerResource {
   /**
    * ServletRequest interface provides HTTP request information.
    */
-  @Context
-  protected HttpServletRequest httpServletRequest;
-
+//  @Context  protected HttpServletRequest httpServletRequest; // requires j2ee (glassfish)
   public PingListenerResource() {
   }
 
@@ -90,7 +86,8 @@ public class PingListenerResource {
      */
     LOG.log(Level.INFO,
             "PingListenerResource received ping '{'remoteAddr={0}, access_token={1}, messageId={2}, content={3}'}'",
-            new Object[]{httpServletRequest.getRemoteAddr(), accessToken, messageID, content});
+            new Object[]{"unavailable", accessToken, messageID, content});
+//            new Object[]{httpServletRequest.getRemoteAddr(), accessToken, messageID, content});
     /**
      * Note that the ESC client is configured to timeout ping status message
      * delivery after 1/2 seconds.

@@ -21,9 +21,7 @@ package ch.keybridge.dev.rs;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -52,9 +50,7 @@ public class DpacStatusListenerResource {
   /**
    * ServletRequest interface provides HTTP request information.
    */
-  @Context
-  protected HttpServletRequest httpServletRequest;
-
+//  @Context  protected HttpServletRequest httpServletRequest; // requires j2ee (glassfish)
   /**
    * Creates a new instance of DpaStatusResource
    */
@@ -92,7 +88,8 @@ public class DpacStatusListenerResource {
      */
     LOG.log(Level.INFO,
             "DpacStatusListenerResource received notice '{'remoteAddr={0}, access_token={1}, messageId={2}, relatesTo={3}, content={4}'}'",
-            new Object[]{httpServletRequest.getRemoteAddr(), accessToken, messageID, relatesTo, content});
+            new Object[]{"unavailable", accessToken, messageID, relatesTo, content});
+//            new Object[]{httpServletRequest.getRemoteAddr(), accessToken, messageID, relatesTo, content});
 
     /**
      * Note that the ESC client is configured to timeout DPAC status message
