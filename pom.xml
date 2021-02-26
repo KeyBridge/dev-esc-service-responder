@@ -4,7 +4,7 @@
 
   <groupId>keybridge.application</groupId>
   <artifactId>dev-esc-service-responder</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <packaging>war</packaging>
 
   <name>dev-esc-service-responder</name>
@@ -15,12 +15,66 @@
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>javax</groupId>
       <artifactId>javaee-web-api</artifactId>
       <version>7.0</version>
       <scope>provided</scope>
     </dependency>
+
+    <!--test dependencies-->
+
+    <!--Key Bridge CBRS peering message classess-->
+    <dependency>
+      <groupId>keybridge.lib</groupId>
+      <artifactId>cbrs-peering</artifactId>
+      <version>0.69.0</version>
+      <scope>test</scope>
+      <type>jar</type>
+    </dependency>
+
+    <!--Key Bridge OAuth 2.0 implementation-->
+    <dependency>
+      <groupId>keybridge.lib</groupId>
+      <artifactId>oauth</artifactId>
+      <version>2.2.7</version>
+      <scope>test</scope>
+      <type>jar</type>
+    </dependency>
+
+    <!--Key Bridge JSON-B utilities-->
+    <dependency>
+      <groupId>keybridge.lib</groupId>
+      <artifactId>jsonb-adapter</artifactId>
+      <version>1.1.0</version>
+      <scope>test</scope>
+      <type>jar</type>
+    </dependency>
+
+    <!--JSONB annotations-->
+    <!-- JSON-P -->
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.json</artifactId>
+      <version>1.1.5</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- JSON-B API -->
+    <dependency>
+      <groupId>jakarta.json.bind</groupId>
+      <artifactId>jakarta.json.bind-api</artifactId>
+      <version>1.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Yasson (JSON-B implementation) -->
+    <dependency>
+      <groupId>org.eclipse</groupId>
+      <artifactId>yasson</artifactId>
+      <version>1.0.3</version>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -74,5 +128,10 @@
   </build>
   <description>ESC rest responder
 
-    TEST application</description>
+
+
+    v0.0.1 -  TEST application
+    v0.0.2 - add example TEST client code templates and message body reader / writer
+
+  </description>
 </project>
